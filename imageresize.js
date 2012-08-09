@@ -37,7 +37,7 @@ ImageResizer.FORMAT_PNG = "png";
  *              width: width of the resized image
  */
 ImageResizer.prototype.resizeImage = function(success, fail, imageData, width,
-        height, options) {
+					      height, options) {
     if (!options) {
         options = {}
     }
@@ -50,9 +50,8 @@ ImageResizer.prototype.resizeImage = function(success, fail, imageData, width,
         resizeType : options.resizeType,
         quality : options.quality ? options.quality : 70
     };
+    return PhoneGap.exec(success, fail, "ImageResizer","resizeImage", [params]);
 
-    return PhoneGap.exec(success, fail, "com.webXells.imageResizer",
-            "resizeImage", [params]);
 }
 /**
  * Get an image width and height
@@ -66,16 +65,20 @@ ImageResizer.prototype.resizeImage = function(success, fail, imageData, width,
  *              width: width of the image
  */
 ImageResizer.prototype.getImageSize = function(success, fail, imageData,
-        options) {
+					       options) {
+    
     if (!options) {
         options = {}
     }
+    alert("unko!"+options);
     var params = {
         data : imageData,
         imageDataType : options.imageType 
     };
-    return PhoneGap.exec(success, fail, "com.webXells.imageResizer",
-            "imageSize", [params]);
+            
+    return PhoneGap.exec(success, fail, "ImageResizer",
+			 "imageSize", [params]);
+
 }
 
 /**
@@ -89,8 +92,8 @@ ImageResizer.prototype.getImageSize = function(success, fail, imageData,
  *              filename : filename to be stored, with ot without ending (if no ending given, format will be used) - must be given.
  *              directory : in which directory should the file be stored - must be given
  *              quality : INTEGER, compression quality - defaults to 100
- *				photoAlbum : [iOS only] store the image in the temporary directory of the app, or in the photoAlbum (true for photoAlbum)
- *							 Note : in iOS only filename should be given, directory will be ignored.
+ *photoAlbum : [iOS only] store the image in the temporary directory of the app, or in the photoAlbum (true for photoAlbum)
+ * Note : in iOS only filename should be given, directory will be ignored.
  * @returns JSON Object with the following parameters:
  *              url : URL of the file just stored
  */
@@ -105,22 +108,23 @@ ImageResizer.prototype.storeImage = function(success, fail, imageData, options) 
         filename : options.filename,
         directory : options.directory,
         quality : options.quality ? options.quality : 100,
-		photoAlbum : options.photoAlbum ? options.photoAlbum : true
+	photoAlbum : options.photoAlbum ? options.photoAlbum : true
     };
 
-    return PhoneGap.exec(success, fail, "com.webXells.imageResizer",
-            "storeImage", [params]);
+    return PhoneGap.exec(success, fail, "ImageResizer",
+			 "storeImage", [params]);
+
 }
 
 PhoneGap.addConstructor(function() {
-	//is it iOS
-	if(device.platform.indexOf("iPhone") != -1) {
-		if(!window.plugins) {
-			window.plugins = {};
-		}
-		window.plugins.imageResizer = new ImageResizer();
-	} else {
-		PhoneGap.addPlugin('imageResizer', new ImageResizer());
+    //is it iOS
+    if(device.platform.indexOf("iPhone") != -1) {
+	if(!window.plugins) {
+	    window.plugins = {};
 	}
-	console.log("Image Resizer Registered under window.plugins.imageResizer");
+	window.plugins.imageResizer = new ImageResizer();
+    } else {
+	PhoneGap.addPlugin('imageResizer', new ImageResizer());
+    }
+    console.log("Image Resizer Registered under window.plugins.imageResizer");
 });
