@@ -35,7 +35,13 @@ For Example:
 
 ### Android quirks and howto's ###
 
+Write down plugin.xml
+
+ <plugin name="ImageResizer" value="com.webXells.ImageResizer.ImageResizePlugin"/>
+
 The storeImage funtion will always store the image to the device's default external storage, under the given Directory and filename. the photoAlbum property will be ignored.
+
+
 
 ### iOS quirks and howto's ###
 
